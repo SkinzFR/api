@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Match Live</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #282828; color: #fff; }
+        #match-info { font-size: 24px; }
+    </style>
+</head>
+<body>
+    <div id="match-info">
+        Chargement des matchs...
+    </div>
+
+    <script>
+        const apiKey = "8dcd16a89735489db77bf095d0fbfbc3";
+        const url = "https://api.football-data.org/v2/competitions/PL/matches";
+        
+        async function fetchMatchData() {
+            const response = await fetch(url, {
+                headers: {
+                    "X-Auth-Token": apiKey
+                }
+            });
+            const data = await response.json();
+            const matches = data.matches;
+            let matchText = "Aucun match en cours.";
+            if (matches && matches.length > 0) {
+                const match = matches[0]; // Exemple avec le premier match
+                matchText = `${match.homeTeam.name} vs ${match.awayTeam.name}: ${match.score.fullTime.homeTeam} - ${match.score.fullTime.awayTeam}`;
+            }
+            document.getElementById("match-info").textContent = matchText;
+        }
+
+        fetchMatchData();
+        setInterval(fetchMatchData, 60000); // Rafraîchit les données toutes les minutes
+    </script>
+</body>
+</html>
